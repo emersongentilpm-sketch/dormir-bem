@@ -1,114 +1,770 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DormirBem - Sons para Bebês</title>
-    <meta name="theme-color" content="#7c3aed">
-    <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { 
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-            background: linear-gradient(135deg, #7c3aed, #a855f7);
-            color: white; min-height: 100vh; padding: 20px; text-align: center;
-        }
-      .container { max-width: 400px; margin: 0 auto; padding-top: 40px; }
-        h1 { font-size: 2.5rem; margin-bottom: 10px; }
-        p { opacity: 0.9; margin-bottom: 40px; }
-      .sound-btn {
-            display: block; width: 100%; padding: 20px; margin: 15px 0;
-            background: rgba(255,255,255,0.2); border: 2px solid rgba(255,255,255,0.3);
-            border-radius: 15px; color: white; font-size: 1.2rem; font-weight: bold;
-            cursor: pointer; backdrop-filter: blur(10px);
-        }
-      .sound-btn:active { transform: scale(0.98); }
-      .playing { background: rgba(34, 197, 94, 0.3); border-color: #22c55e; }
-      .stop-btn { background: #ef4444; margin-top: 30px; border: none; }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DormirBem</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0d0b1a;
+    --bg2: #12102a;
+    --bg3: #1a1736;
+    --surface: rgba(255,255,255,0.04);
+    --surface2: rgba(255,255,255,0.08);
+    --border: rgba(255,255,255,0.09);
+    --accent: #c5a8ff;
+    --accent2: #8b6fff;
+    --gold: #e8c97e;
+    --text: #f0eaf8;
+    --muted: rgba(240,234,248,0.5);
+    --soft: rgba(240,234,248,0.25);
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html {
+    height: 100%;
+    background: var(--bg);
+  }
+  body {
+    min-height: 100%;
+    height: 100%;
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 300;
+    overflow-x: hidden;
+    overflow-y: hidden;
+  }
+
+  /* Stars background */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      radial-gradient(1px 1px at 15% 20%, rgba(255,255,255,0.6) 0%, transparent 100%),
+      radial-gradient(1px 1px at 35% 10%, rgba(255,255,255,0.4) 0%, transparent 100%),
+      radial-gradient(1px 1px at 55% 35%, rgba(255,255,255,0.5) 0%, transparent 100%),
+      radial-gradient(1px 1px at 75% 15%, rgba(255,255,255,0.3) 0%, transparent 100%),
+      radial-gradient(1px 1px at 90% 40%, rgba(255,255,255,0.6) 0%, transparent 100%),
+      radial-gradient(1px 1px at 25% 60%, rgba(255,255,255,0.3) 0%, transparent 100%),
+      radial-gradient(1px 1px at 65% 70%, rgba(255,255,255,0.4) 0%, transparent 100%),
+      radial-gradient(1px 1px at 45% 85%, rgba(255,255,255,0.3) 0%, transparent 100%),
+      radial-gradient(1px 1px at 80% 80%, rgba(255,255,255,0.5) 0%, transparent 100%),
+      radial-gradient(1px 1px at 10% 90%, rgba(255,255,255,0.4) 0%, transparent 100%),
+      radial-gradient(2px 2px at 50% 5%, rgba(197,168,255,0.5) 0%, transparent 100%),
+      radial-gradient(2px 2px at 85% 55%, rgba(197,168,255,0.4) 0%, transparent 100%),
+      radial-gradient(2px 2px at 20% 45%, rgba(197,168,255,0.3) 0%, transparent 100%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* Moon glow */
+  body::after {
+    content: '';
+    position: fixed;
+    top: -120px;
+    right: -80px;
+    width: 400px;
+    height: 400px;
+    background: radial-gradient(circle, rgba(139,111,255,0.15) 0%, transparent 70%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  #app {
+    position: relative;
+    z-index: 1;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    max-width: 420px;
+    margin: 0 auto;
+    overflow: hidden;
+  }
+
+  /* SCREENS */
+  .screen {
+    display: none;
+    flex-direction: column;
+    flex: 1;
+    overflow-y: auto;
+    overflow-x: hidden;
+    -webkit-overflow-scrolling: touch;
+    padding: 0 24px 100px;
+    animation: fadeIn 0.4s ease;
+  }
+  .screen.active { display: flex; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+
+  /* NAV */
+  .nav {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    padding: 14px 8px 18px;
+    border-top: 0.5px solid var(--border);
+    background: linear-gradient(to top, rgba(13,11,26,0.98), rgba(13,11,26,0.85));
+    backdrop-filter: blur(12px);
+    position: fixed;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100%;
+    max-width: 420px;
+    z-index: 100;
+  }
+  .nav-btn {
+    background: none;
+    border: none;
+    color: var(--soft);
+    font-size: 11px;
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 400;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+    padding: 4px 12px;
+    border-radius: 12px;
+    transition: color 0.2s;
+  }
+  .nav-btn .icon { font-size: 20px; }
+  .nav-btn.active { color: var(--accent); }
+  .nav-btn:hover { color: var(--text); }
+
+  /* TOP HEADER */
+  .top-bar {
+    padding: 52px 0 24px;
+    text-align: center;
+  }
+  .app-name {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 13px;
+    letter-spacing: 0.22em;
+    color: var(--gold);
+    font-weight: 400;
+    text-transform: uppercase;
+  }
+
+  /* HOME SCREEN */
+  .moon-container {
+    display: flex;
+    justify-content: center;
+    margin: 8px 0 28px;
+  }
+  .moon {
+    width: 110px;
+    height: 110px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 35% 35%, #e8deff, #c5a8ff 40%, #8b6fff 75%, #4a3a8a);
+    box-shadow: 0 0 40px rgba(139,111,255,0.4), 0 0 80px rgba(139,111,255,0.15);
+    animation: moonPulse 4s ease-in-out infinite;
+    position: relative;
+    overflow: hidden;
+  }
+  .moon::after {
+    content: '';
+    position: absolute;
+    top: 18%;
+    left: 22%;
+    width: 28%;
+    height: 28%;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.12);
+  }
+  @keyframes moonPulse {
+    0%, 100% { box-shadow: 0 0 40px rgba(139,111,255,0.4), 0 0 80px rgba(139,111,255,0.15); }
+    50% { box-shadow: 0 0 55px rgba(139,111,255,0.55), 0 0 100px rgba(139,111,255,0.22); }
+  }
+
+  .home-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 36px;
+    font-weight: 300;
+    line-height: 1.2;
+    text-align: center;
+    margin-bottom: 12px;
+    letter-spacing: -0.01em;
+  }
+  .home-title em { font-style: italic; color: var(--accent); }
+
+  .home-sub {
+    font-size: 14px;
+    color: var(--muted);
+    text-align: center;
+    line-height: 1.7;
+    margin-bottom: 36px;
+  }
+
+  .stats-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 10px;
+    margin-bottom: 32px;
+  }
+  .stat-card {
+    background: var(--surface);
+    border: 0.5px solid var(--border);
+    border-radius: 14px;
+    padding: 14px 10px;
+    text-align: center;
+  }
+  .stat-card .val {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 24px;
+    font-weight: 600;
+    color: var(--accent);
+  }
+  .stat-card .lbl {
+    font-size: 10px;
+    color: var(--soft);
+    margin-top: 3px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+
+  /* BUTTONS */
+  .btn-primary {
+    display: block;
+    width: 100%;
+    padding: 17px;
+    background: linear-gradient(135deg, var(--accent2), #6a4fd4);
+    border: none;
+    border-radius: 16px;
+    color: #fff;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 15px;
+    font-weight: 500;
+    cursor: pointer;
+    letter-spacing: 0.02em;
+    transition: opacity 0.2s, transform 0.15s;
+    box-shadow: 0 8px 32px rgba(139,111,255,0.25);
+  }
+  .btn-primary:hover { opacity: 0.9; transform: translateY(-1px); }
+  .btn-primary:active { transform: scale(0.98); }
+
+  .btn-ghost {
+    display: block;
+    width: 100%;
+    padding: 15px;
+    background: var(--surface);
+    border: 0.5px solid var(--border);
+    border-radius: 16px;
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 15px;
+    font-weight: 400;
+    cursor: pointer;
+    transition: background 0.2s;
+    margin-top: 12px;
+  }
+  .btn-ghost:hover { background: var(--surface2); }
+
+  /* SECTION HEADER */
+  .section-header {
+    padding: 48px 0 24px;
+  }
+  .section-tag {
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    color: var(--gold);
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+  .section-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 30px;
+    font-weight: 300;
+    line-height: 1.25;
+  }
+  .section-title em { font-style: italic; color: var(--accent); }
+
+  /* DIAGNÓSTICO */
+  .question-block { margin-bottom: 28px; }
+  .q-label {
+    font-size: 13px;
+    color: var(--muted);
+    margin-bottom: 12px;
+    font-weight: 400;
+  }
+  .q-options { display: flex; flex-wrap: wrap; gap: 8px; }
+  .q-opt {
+    background: var(--surface);
+    border: 0.5px solid var(--border);
+    border-radius: 22px;
+    padding: 9px 18px;
+    font-size: 13px;
+    color: var(--text);
+    cursor: pointer;
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 300;
+    transition: all 0.2s;
+  }
+  .q-opt:hover { background: var(--surface2); }
+  .q-opt.selected {
+    background: rgba(139,111,255,0.18);
+    border-color: var(--accent2);
+    color: var(--accent);
+  }
+
+  /* SONS */
+  .sound-grid { display: flex; flex-direction: column; gap: 10px; }
+  .sound-card {
+    background: var(--surface);
+    border: 0.5px solid var(--border);
+    border-radius: 16px;
+    padding: 16px 18px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+  .sound-card:hover { background: var(--surface2); }
+  .sound-card.playing { border-color: var(--accent2); background: rgba(139,111,255,0.1); }
+  .sound-icon {
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px;
+    background: var(--surface2);
+    flex-shrink: 0;
+  }
+  .sound-info { flex: 1; }
+  .sound-name { font-size: 15px; font-weight: 400; }
+  .sound-desc { font-size: 12px; color: var(--muted); margin-top: 2px; }
+  .play-btn {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    border: 0.5px solid var(--border);
+    background: none;
+    color: var(--text);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    transition: all 0.2s;
+    flex-shrink: 0;
+  }
+  .sound-card.playing .play-btn {
+    background: var(--accent2);
+    border-color: var(--accent2);
+  }
+
+  .timer-row {
+    display: flex;
+    gap: 8px;
+    margin-top: 20px;
+    margin-bottom: 8px;
+  }
+  .timer-btn {
+    flex: 1;
+    background: var(--surface);
+    border: 0.5px solid var(--border);
+    border-radius: 10px;
+    padding: 10px 6px;
+    color: var(--muted);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    cursor: pointer;
+    text-align: center;
+    transition: all 0.2s;
+  }
+  .timer-btn.active { border-color: var(--gold); color: var(--gold); background: rgba(232,201,126,0.06); }
+
+  /* RESPIRAÇÃO */
+  .breath-center {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding-bottom: 60px;
+  }
+  .breath-ring {
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+    border: 1.5px solid rgba(197,168,255,0.3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    margin-bottom: 32px;
+  }
+  .breath-inner {
+    width: 130px;
+    height: 130px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(139,111,255,0.35), rgba(139,111,255,0.08));
+    border: 1px solid rgba(197,168,255,0.25);
+    transition: transform 4s cubic-bezier(0.4,0,0.2,1), opacity 4s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .breath-inner.expanding { transform: scale(1.45); opacity: 1; }
+  .breath-inner.holding { transform: scale(1.45); opacity: 0.8; }
+  .breath-inner.shrinking { transform: scale(1); opacity: 0.5; }
+  .breath-phase {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 14px;
+    font-style: italic;
+    color: var(--accent);
+    letter-spacing: 0.08em;
+  }
+  .breath-count {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 52px;
+    font-weight: 300;
+    color: var(--text);
+    min-width: 60px;
+    text-align: center;
+  }
+  .breath-instruction {
+    font-size: 13px;
+    color: var(--muted);
+    text-align: center;
+    margin-bottom: 8px;
+  }
+  .breath-cycle {
+    font-size: 12px;
+    color: var(--soft);
+    margin-bottom: 28px;
+    letter-spacing: 0.06em;
+  }
+
+  /* CHECKLIST */
+  .checklist { display: flex; flex-direction: column; gap: 10px; }
+  .check-item {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    background: var(--surface);
+    border: 0.5px solid var(--border);
+    border-radius: 14px;
+    padding: 14px 16px;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .check-item.done { opacity: 0.55; }
+  .check-box {
+    width: 22px;
+    height: 22px;
+    border-radius: 8px;
+    border: 1.5px solid rgba(197,168,255,0.35);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    transition: all 0.2s;
+    font-size: 13px;
+  }
+  .check-item.done .check-box {
+    background: var(--accent2);
+    border-color: var(--accent2);
+  }
+  .check-text { font-size: 14px; font-weight: 300; }
+  .check-item.done .check-text { text-decoration: line-through; color: var(--muted); }
+  .check-emoji { font-size: 18px; width: 24px; text-align: center; }
+  .progress-bar-wrap {
+    background: var(--surface);
+    border-radius: 8px;
+    height: 5px;
+    margin-bottom: 20px;
+    overflow: hidden;
+  }
+  .progress-bar-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--accent2), var(--accent));
+    border-radius: 8px;
+    transition: width 0.4s ease;
+  }
+  .progress-label {
+    font-size: 12px;
+    color: var(--muted);
+    margin-bottom: 8px;
+    text-align: right;
+  }
+
+  /* REGISTRO */
+  .register-card {
+    background: var(--surface);
+    border: 0.5px solid var(--border);
+    border-radius: 18px;
+    padding: 20px;
+    margin-bottom: 14px;
+  }
+  .register-title {
+    font-size: 13px;
+    color: var(--muted);
+    margin-bottom: 14px;
+    letter-spacing: 0.05em;
+  }
+  .time-inputs {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 16px;
+  }
+  .time-label { font-size: 11px; color: var(--soft); margin-bottom: 6px; letter-spacing: 0.07em; text-transform: uppercase; }
+  .time-input {
+    background: var(--bg3);
+    border: 0.5px solid var(--border);
+    border-radius: 10px;
+    padding: 12px;
+    color: var(--text);
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 22px;
+    font-weight: 300;
+    width: 100%;
+    text-align: center;
+    outline: none;
+  }
+  .time-input:focus { border-color: var(--accent2); }
+
+  .quality-row {
+    display: flex;
+    gap: 8px;
+    justify-content: space-between;
+  }
+  .qual-btn {
+    flex: 1;
+    background: var(--surface);
+    border: 0.5px solid var(--border);
+    border-radius: 10px;
+    padding: 10px 4px;
+    font-size: 11px;
+    color: var(--muted);
+    cursor: pointer;
+    font-family: 'DM Sans', sans-serif;
+    text-align: center;
+    transition: all 0.2s;
+  }
+  .qual-btn .qual-icon { font-size: 18px; display: block; margin-bottom: 4px; }
+  .qual-btn.active { border-color: var(--accent2); color: var(--accent); background: rgba(139,111,255,0.1); }
+
+  .history-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 13px 0;
+    border-bottom: 0.5px solid var(--border);
+  }
+  .history-item:last-child { border-bottom: none; }
+  .history-date { font-size: 12px; color: var(--muted); }
+  .history-hours { font-family: 'Cormorant Garamond', serif; font-size: 20px; color: var(--text); }
+  .history-qual { font-size: 16px; }
+
+  /* DIAGNOSIS RESULT */
+  .result-card {
+    background: rgba(139,111,255,0.08);
+    border: 0.5px solid rgba(139,111,255,0.25);
+    border-radius: 18px;
+    padding: 22px;
+    margin: 16px 0 24px;
+  }
+  .result-title { font-family: 'Cormorant Garamond', serif; font-size: 22px; font-weight: 400; margin-bottom: 10px; }
+  .result-text { font-size: 14px; color: var(--muted); line-height: 1.7; }
+
+</style>
 </head>
 <body>
-    <div class="container">
-        <h1>🌙 DormirBem</h1>
-        <p>Sons relaxantes para o seu bebê dormir</p>
-        
-        <button class="sound-btn" onclick="playSound('rain')">🌧️ Chuva Relaxante</button>
-        <button class="sound-btn" onclick="playSound('white')">📻 Ruído Branco</button>
-        <button class="sound-btn" onclick="playSound('fan')">🌀 Ventilador</button>
-        <button class="sound-btn stop-btn" onclick="stopAll()">⏹️ Parar Tudo</button>
+<div id="app">
+
+  <!-- HOME -->
+  <div class="screen active" id="screen-home">
+    <div class="top-bar"><div class="app-name">✦ DormirBem ✦</div></div>
+    <div class="moon-container">
+      <div class="moon"></div>
+    </div>
+    <h1 class="home-title">Noites de sono<br><em>profundo e sereno</em></h1>
+    <p class="home-sub">Rituais noturnos, sons curativos<br>e técnicas que realmente funcionam.</p>
+    <div class="stats-row">
+      <div class="stat-card"><div class="val" id="streak-val">0</div><div class="lbl">Dias seguidos</div></div>
+      <div class="stat-card"><div class="val" id="avg-val">—</div><div class="lbl">Média de horas</div></div>
+      <div class="stat-card"><div class="val" id="checklist-val">0</div><div class="lbl">Hábitos hoje</div></div>
+    </div>
+    <button class="btn-primary" onclick="goTo('sons')">🎧 Iniciar ritual noturno</button>
+    <button class="btn-ghost" onclick="goTo('diagnostico')">✦ Fazer diagnóstico do sono</button>
+  </div>
+
+  <!-- DIAGNÓSTICO -->
+  <div class="screen" id="screen-diagnostico">
+    <div class="section-header">
+      <div class="section-tag">Diagnóstico</div>
+      <h2 class="section-title">Como está<br>o seu <em>sono?</em></h2>
     </div>
 
-    <script>
-        let audioContext;
-        let currentOscillators = [];
-        
-        function initAudio() {
-            if (!audioContext) {
-                audioContext = new (window.AudioContext || window.webkitAudioContext)();
-            }
-        }
-        
-        function stopAll() {
-            currentOscillators.forEach(osc => {
-                try { osc.stop(); } catch(e) {}
-            });
-            currentOscillators = [];
-            document.querySelectorAll('.sound-btn').forEach(btn => btn.classList.remove('playing'));
-        }
-        
-        function playSound(type) {
-            initAudio();
-            stopAll();
-            event.target.classList.add('playing');
-            
-            if (type === 'rain') createRainSound();
-            else if (type === 'white') createWhiteNoise();
-            else if (type === 'fan') createFanSound();
-        }
-        
-        function createRainSound() {
-            for (let i = 0; i < 3; i++) {
-                const bufferSize = 4096;
-                const noise = audioContext.createScriptProcessor(bufferSize, 1, 1);
-                noise.onaudioprocess = e => {
-                    const output = e.outputBuffer.getChannelData(0);
-                    for (let i = 0; i < bufferSize; i++) output[i] = Math.random() * 2 - 1;
-                };
-                const filter = audioContext.createBiquadFilter();
-                filter.type = 'bandpass';
-                filter.frequency.value = 800 + i * 200;
-                noise.connect(filter);
-                filter.connect(audioContext.destination);
-                currentOscillators.push(noise);
-            }
-        }
-        
-        function createWhiteNoise() {
-            const bufferSize = 4096;
-            const noise = audioContext.createScriptProcessor(bufferSize, 1, 1);
-            noise.onaudioprocess = e => {
-                const output = e.outputBuffer.getChannelData(0);
-                for (let i = 0; i < bufferSize; i++) output[i] = Math.random() * 2 - 1;
-            };
-            const gain = audioContext.createGain();
-            gain.gain.value = 0.1;
-            noise.connect(gain);
-            gain.connect(audioContext.destination);
-            currentOscillators.push(noise);
-        }
-        
-        function createFanSound() {
-            const osc = audioContext.createOscillator();
-            const gain = audioContext.createGain();
-            osc.type = 'sawtooth';
-            osc.frequency.value = 80;
-            gain.gain.value = 0.05;
-            osc.connect(gain);
-            gain.connect(audioContext.destination);
-            osc.start();
-            currentOscillators.push(osc);
-        }
-        
-        document.body.addEventListener('click', initAudio, { once: true });
-    </script>
-</body>
-</html>
+    <div class="question-block">
+      <div class="q-label">Em média, que horas você costuma dormir?</div>
+      <div class="q-options">
+        <button class="q-opt" onclick="selectOpt(this,'q1')">Antes das 22h</button>
+        <button class="q-opt" onclick="selectOpt(this,'q1')">22h–00h</button>
+        <button class="q-opt" onclick="selectOpt(this,'q1')">00h–2h</button>
+        <button class="q-opt" onclick="selectOpt(this,'q1')">Depois das 2h</button>
+      </div>
+    </div>
+
+    <div class="question-block">
+      <div class="q-label">Como você avalia a qualidade do seu sono?</div>
+      <div class="q-options">
+        <button class="q-opt" onclick="selectOpt(this,'q2')">😴 Ótimo</button>
+        <button class="q-opt" onclick="selectOpt(this,'q2')">🙂 Bom</button>
+        <button class="q-opt" onclick="selectOpt(this,'q2')">😐 Regular</button>
+        <button class="q-opt" onclick="selectOpt(this,'q2')">😩 Ruim</button>
+      </div>
+    </div>
+
+    <div class="question-block">
+      <div class="q-label">Qual é sua maior dificuldade na hora de dormir?</div>
+      <div class="q-options">
+        <button class="q-opt" onclick="selectOpt(this,'q3')">Pensamentos acelerados</button>
+        <button class="q-opt" onclick="selectOpt(this,'q3')">Demoro a pegar no sono</button>
+        <button class="q-opt" onclick="selectOpt(this,'q3')">Acordo durante a noite</button>
+        <button class="q-opt" onclick="selectOpt(this,'q3')">Acordo cansado(a)</button>
+        <button class="q-opt" onclick="selectOpt(this,'q3')">Nenhuma</button>
+      </div>
+    </div>
+
+    <div id="diag-result" style="display:none">
+      <div class="result-card">
+        <div class="result-title" id="diag-title"></div>
+        <p class="result-text" id="diag-text"></p>
+      </div>
+    </div>
+
+    <button class="btn-primary" onclick="showDiagResult()">Ver meu diagnóstico</button>
+  </div>
+
+  <!-- SONS -->
+  <div class="screen" id="screen-sons">
+    <div class="section-header">
+      <div class="section-tag">Sons Curativos</div>
+      <h2 class="section-title">Sons para<br><em>adormecer</em></h2>
+    </div>
+
+    <div class="timer-row">
+      <button class="timer-btn" onclick="setTimer(this,15)">15 min</button>
+      <button class="timer-btn active" onclick="setTimer(this,30)">30 min</button>
+      <button class="timer-btn" onclick="setTimer(this,60)">60 min</button>
+      <button class="timer-btn" onclick="setTimer(this,0)">Livre</button>
+    </div>
+    <div id="timer-display" style="text-align:center;font-family:'Cormorant Garamond',serif;font-size:28px;color:var(--gold);padding:8px 0 18px;"></div>
+
+    <div class="sound-grid">
+      <div class="sound-card" onclick="toggleSound(this,'rain')">
+        <div class="sound-icon">🌧</div>
+        <div class="sound-info">
+          <div class="sound-name">Chuva suave</div>
+          <div class="sound-desc">Relaxamento profundo</div>
+        </div>
+        <button class="play-btn">▶</button>
+      </div>
+      <div class="sound-card" onclick="toggleSound(this,'wind')">
+        <div class="sound-icon">🌿</div>
+        <div class="sound-info">
+          <div class="sound-name">Brisa na floresta</div>
+          <div class="sound-desc">Conexão com a natureza</div>
+        </div>
+        <button class="play-btn">▶</button>
+      </div>
+      <div class="sound-card" onclick="toggleSound(this,'white')">
+        <div class="sound-icon">〰️</div>
+        <div class="sound-info">
+          <div class="sound-name">Ruído branco</div>
+          <div class="sound-desc">Bloqueia distrações</div>
+        </div>
+        <button class="play-btn">▶</button>
+      </div>
+      <div class="sound-card" onclick="toggleSound(this,'ocean')">
+        <div class="sound-icon">🌊</div>
+        <div class="sound-info">
+          <div class="sound-name">Ondas do mar</div>
+          <div class="sound-desc">Calma e serenidade</div>
+        </div>
+        <button class="play-btn">▶</button>
+      </div>
+      <div class="sound-card" onclick="toggleSound(this,'fire')">
+        <div class="sound-icon">🔥</div>
+        <div class="sound-info">
+          <div class="sound-name">Lareira</div>
+          <div class="sound-desc">Aconchego e calor</div>
+        </div>
+        <button class="play-btn">▶</button>
+      </div>
+    </div>
+    <div style="background:rgba(232,201,126,0.06);border:0.5px solid rgba(232,201,126,0.2);border-radius:12px;padding:12px 16px;margin-top:18px;font-size:12px;color:rgba(232,201,126,0.7);line-height:1.6;">
+      🎧 Use fones de ouvido para uma experiência mais imersiva e relaxante.
+    </div>
+  </div>
+
+  <!-- RESPIRAÇÃO -->
+  <div class="screen" id="screen-respiracao">
+    <div class="section-header" style="padding-bottom:8px">
+      <div class="section-tag">Técnica 4-7-8</div>
+      <h2 class="section-title">Respiração<br><em>consciente</em></h2>
+    </div>
+    <p style="font-size:13px;color:var(--muted);margin-bottom:20px;line-height:1.6;">Inspire 4s → segure 7s → expire 8s. Repita 4 ciclos para relaxar o sistema nervoso.</p>
+
+    <div class="breath-center">
+      <div class="breath-ring">
+        <div class="breath-inner" id="breath-circle">
+          <span style="font-size:28px" id="breath-emoji">🌙</span>
+        </div>
+      </div>
+      <div class="breath-count" id="breath-count">—</div>
+      <div class="breath-phase" id="breath-phase">pronto para começar</div>
+      <div class="breath-cycle" id="breath-cycle-label">CICLO 0 / 4</div>
+      <div class="breath-instruction">Siga o ritmo da animação</div>
+      <button class="btn-primary" id="breath-btn" onclick="toggleBreath()" style="width:180px">Começar</button>
+    </div>
+  </div>
+
+  <!-- CHECKLIST -->
+  <div class="screen" id="screen-checklist">
+    <div class="section-header">
+      <div class="section-tag">Ritual Noturno</div>
+      <h2 class="section-title">Hábitos de<br><em>boa noite</em></h2>
+    </div>
+    <div class="progress-label" id="check-progress-label">0 de 7 concluídos</div>
+    <div class="progress-bar-wrap"><div class="progress-bar-fill" id="check-bar" style="width:0%"></div></div>
+    <div class="checklist" id="checklist">
+      <div class="check-item" onclick="toggleCheck(this)"><span class="check-emoji">📱</span><div class="check-box"></div><span class="check-text">Desligar telas 30 min antes</span></div>
+      <div class="check-item" onclick="toggleCheck(this)"><span class="check-emoji">🍵</span><div class="check-box"></div><span class="check-text">Tomar um chá calmante</span></div>
+      <div class="check-item" onclick="toggleCheck(this)"><span class="check-emoji">🌡</span><div class="check-box"></div><span class="check-text">Ambiente fresco (18–22°C)</span></div>
+      <div class="check-item" onclick="toggleCheck(this)"><span class="check-emoji">📖</span><div class="check-box"></div><span class="check-text">Ler algo leve por 10 min</span></div>
+      <div class="check-item" onclick="toggleCheck(this)"><span class="check-emoji">🧘</span><div class="check-box"></div><span class="check-text">Meditação ou respiração</span></div>
+      <div class="check-item" onclick="toggleCheck(this)"><span class="check-emoji">💡</span><div class="check-box"></div><span class="check-text">Apagar luzes fortes</span></div>
+      <div class="check-item" onclick="toggleCheck(this)"><span class="check-emoji">🙏</span><div class="check-box"></div><span class="check-text">Gratidão: 3 coisas boas do dia</span></div>
+    </div>
+  </div>
+
+  <!-- REGISTRO -->
+  <div class="screen" id="screen-registro">
+    <div class="section-header">
+      <div class="section-tag">Diário do Sono</div>
+      <h2 class="section-title">Registre sua<br><em>noite</em></h2>
+    </div>
+
+    <div class="register-card">
+      <div class="register-title">HORÁRIOS DE HOJE</div>
+      <div class="time-inputs">
+        <div>
+          <div class="time-label">Dormiu às</div>
+          <input class="time-input" type="time" id="sleep-time" value="22:30">
+        </div>
+        <div>
+          <div class="time-label">Acordou às</div>
+          <input class="time-input" type="time" id="wake-time" value="06:30">
+        </div>
+      </div>
+      <div class
