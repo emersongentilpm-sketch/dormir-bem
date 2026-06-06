@@ -17,3 +17,21 @@
 - Animações suaves
 - Interface intuitiva
 - Armazenamento local de dados
+## Compatibilidade de Navegadores
+- Chrome (recomendado)
+- Firefox
+- Safari
+- Edge
+- Não recomendado para IE
+
+### Requisitos Mínimos
+- Navegador com suporte a:
+  - HTML5
+  - Web Audio API
+  - LocalStorage
+  - Flexbox/Grid
+
+### Dispositivos Compatíveis
+- Desktops
+- Tablets
+- Smartphones modernos
