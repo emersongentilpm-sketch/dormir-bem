@@ -28,16 +28,13 @@
   }
   body {
     min-height: 100%;
-    height: 100%;
     background: var(--bg);
     color: var(--text);
     font-family: 'DM Sans', sans-serif;
     font-weight: 300;
     overflow-x: hidden;
-    overflow-y: hidden;
   }
 
-  /* Stars background */
   body::before {
     content: '';
     position: fixed;
@@ -60,7 +57,6 @@
     z-index: 0;
   }
 
-  /* Moon glow */
   body::after {
     content: '';
     position: fixed;
@@ -76,15 +72,13 @@
   #app {
     position: relative;
     z-index: 1;
-    height: 100vh;
+    min-height: 100vh;
     display: flex;
     flex-direction: column;
     max-width: 420px;
     margin: 0 auto;
-    overflow: hidden;
   }
 
-  /* SCREENS */
   .screen {
     display: none;
     flex-direction: column;
@@ -98,7 +92,6 @@
   .screen.active { display: flex; }
   @keyframes fadeIn { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
 
-  /* NAV */
   .nav {
     display: flex;
     justify-content: space-around;
@@ -113,7 +106,7 @@
     transform: translateX(-50%);
     width: 100%;
     max-width: 420px;
-    z-index: 100;
+    z-index: 9999;
   }
   .nav-btn {
     background: none;
@@ -135,7 +128,6 @@
   .nav-btn.active { color: var(--accent); }
   .nav-btn:hover { color: var(--text); }
 
-  /* TOP HEADER */
   .top-bar {
     padding: 52px 0 24px;
     text-align: center;
@@ -149,7 +141,6 @@
     text-transform: uppercase;
   }
 
-  /* HOME SCREEN */
   .moon-container {
     display: flex;
     justify-content: center;
@@ -226,7 +217,6 @@
     text-transform: uppercase;
   }
 
-  /* BUTTONS */
   .btn-primary {
     display: block;
     width: 100%;
@@ -263,7 +253,6 @@
   }
   .btn-ghost:hover { background: var(--surface2); }
 
-  /* SECTION HEADER */
   .section-header {
     padding: 48px 0 24px;
   }
@@ -282,7 +271,6 @@
   }
   .section-title em { font-style: italic; color: var(--accent); }
 
-  /* DIAGNÓSTICO */
   .question-block { margin-bottom: 28px; }
   .q-label {
     font-size: 13px;
@@ -310,7 +298,6 @@
     color: var(--accent);
   }
 
-  /* SONS */
   .sound-grid { display: flex; flex-direction: column; gap: 10px; }
   .sound-card {
     background: var(--surface);
@@ -380,7 +367,6 @@
   }
   .timer-btn.active { border-color: var(--gold); color: var(--gold); background: rgba(232,201,126,0.06); }
 
-  /* RESPIRAÇÃO */
   .breath-center {
     flex: 1;
     display: flex;
@@ -442,7 +428,6 @@
     letter-spacing: 0.06em;
   }
 
-  /* CHECKLIST */
   .checklist { display: flex; flex-direction: column; gap: 10px; }
   .check-item {
     display: flex;
@@ -495,7 +480,6 @@
     text-align: right;
   }
 
-  /* REGISTRO */
   .register-card {
     background: var(--surface);
     border: 0.5px solid var(--border);
@@ -564,7 +548,6 @@
   .history-hours { font-family: 'Cormorant Garamond', serif; font-size: 20px; color: var(--text); }
   .history-qual { font-size: 16px; }
 
-  /* DIAGNOSIS RESULT */
   .result-card {
     background: rgba(139,111,255,0.08);
     border: 0.5px solid rgba(139,111,255,0.25);
@@ -580,7 +563,6 @@
 <body>
 <div id="app">
 
-  <!-- HOME -->
   <div class="screen active" id="screen-home">
     <div class="top-bar"><div class="app-name">✦ DormirBem ✦</div></div>
     <div class="moon-container">
@@ -597,7 +579,6 @@
     <button class="btn-ghost" onclick="goTo('diagnostico')">✦ Fazer diagnóstico do sono</button>
   </div>
 
-  <!-- DIAGNÓSTICO -->
   <div class="screen" id="screen-diagnostico">
     <div class="section-header">
       <div class="section-tag">Diagnóstico</div>
@@ -645,7 +626,6 @@
     <button class="btn-primary" onclick="showDiagResult()">Ver meu diagnóstico</button>
   </div>
 
-  <!-- SONS -->
   <div class="screen" id="screen-sons">
     <div class="section-header">
       <div class="section-tag">Sons Curativos</div>
@@ -662,12 +642,12 @@
 
     <div class="sound-grid">
       <div class="sound-card" onclick="toggleSound(this,'rain')">
-        <div class="sound-icon">🌧</div>
+        <div class="sound-icon">🌧️</div>
         <div class="sound-info">
           <div class="sound-name">Chuva suave</div>
           <div class="sound-desc">Relaxamento profundo</div>
         </div>
-        <button class="play-btn">▶</button>
+        <button class="play-btn">▶️</button>
       </div>
       <div class="sound-card" onclick="toggleSound(this,'wind')">
         <div class="sound-icon">🌿</div>
@@ -675,7 +655,7 @@
           <div class="sound-name">Brisa na floresta</div>
           <div class="sound-desc">Conexão com a natureza</div>
         </div>
-        <button class="play-btn">▶</button>
+        <button class="play-btn">▶️</button>
       </div>
       <div class="sound-card" onclick="toggleSound(this,'white')">
         <div class="sound-icon">〰️</div>
@@ -683,7 +663,7 @@
           <div class="sound-name">Ruído branco</div>
           <div class="sound-desc">Bloqueia distrações</div>
         </div>
-        <button class="play-btn">▶</button>
+        <button class="play-btn">▶️</button>
       </div>
       <div class="sound-card" onclick="toggleSound(this,'ocean')">
         <div class="sound-icon">🌊</div>
@@ -691,7 +671,7 @@
           <div class="sound-name">Ondas do mar</div>
           <div class="sound-desc">Calma e serenidade</div>
         </div>
-        <button class="play-btn">▶</button>
+        <button class="play-btn">▶️</button>
       </div>
       <div class="sound-card" onclick="toggleSound(this,'fire')">
         <div class="sound-icon">🔥</div>
@@ -699,7 +679,7 @@
           <div class="sound-name">Lareira</div>
           <div class="sound-desc">Aconchego e calor</div>
         </div>
-        <button class="play-btn">▶</button>
+        <button class="play-btn">▶️</button>
       </div>
     </div>
     <div style="background:rgba(232,201,126,0.06);border:0.5px solid rgba(232,201,126,0.2);border-radius:12px;padding:12px 16px;margin-top:18px;font-size:12px;color:rgba(232,201,126,0.7);line-height:1.6;">
@@ -707,7 +687,6 @@
     </div>
   </div>
 
-  <!-- RESPIRAÇÃO -->
   <div class="screen" id="screen-respiracao">
     <div class="section-header" style="padding-bottom:8px">
       <div class="section-tag">Técnica 4-7-8</div>
@@ -729,7 +708,6 @@
     </div>
   </div>
 
-  <!-- CHECKLIST -->
   <div class="screen" id="screen-checklist">
     <div class="section-header">
       <div class="section-tag">Ritual Noturno</div>
@@ -740,7 +718,7 @@
     <div class="checklist" id="checklist">
       <div class="check-item" onclick="toggleCheck(this)"><span class="check-emoji">📱</span><div class="check-box"></div><span class="check-text">Desligar telas 30 min antes</span></div>
       <div class="check-item" onclick="toggleCheck(this)"><span class="check-emoji">🍵</span><div class="check-box"></div><span class="check-text">Tomar um chá calmante</span></div>
-      <div class="check-item" onclick="toggleCheck(this)"><span class="check-emoji">🌡</span><div class="check-box"></div><span class="check-text">Ambiente fresco (18–22°C)</span></div>
+      <div class="check-item" onclick="toggleCheck(this)"><span class="check-emoji">🌡️</span><div class="check-box"></div><span class="check-text">Ambiente fresco (18–22°C)</span></div>
       <div class="check-item" onclick="toggleCheck(this)"><span class="check-emoji">📖</span><div class="check-box"></div><span class="check-text">Ler algo leve por 10 min</span></div>
       <div class="check-item" onclick="toggleCheck(this)"><span class="check-emoji">🧘</span><div class="check-box"></div><span class="check-text">Meditação ou respiração</span></div>
       <div class="check-item" onclick="toggleCheck(this)"><span class="check-emoji">💡</span><div class="check-box"></div><span class="check-text">Apagar luzes fortes</span></div>
@@ -748,7 +726,6 @@
     </div>
   </div>
 
-  <!-- REGISTRO -->
   <div class="screen" id="screen-registro">
     <div class="section-header">
       <div class="section-tag">Diário do Sono</div>
@@ -767,4 +744,440 @@
           <input class="time-input" type="time" id="wake-time" value="06:30">
         </div>
       </div>
-      <div class
+      <div class="register-title">QUALIDADE DA NOITE</div>
+      <div class="quality-row">
+        <button class="qual-btn" onclick="selectQual(this,'Péssima')"><span class="qual-icon">😩</span>Péssima</button>
+        <button class="qual-btn" onclick="selectQual(this,'Regular')"><span class="qual-icon">😐</span>Regular</button>
+        <button class="qual-btn active" onclick="selectQual(this,'Boa')"><span class="qual-icon">🙂</span>Boa</button>
+        <button class="qual-btn" onclick="selectQual(this,'Ótima')"><span class="qual-icon">😴</span>Ótima</button>
+      </div>
+    </div>
+
+    <button class="btn-primary" onclick="saveRecord()">Salvar registro</button>
+
+    <div style="margin-top:28px;">
+      <div style="font-size:13px;color:var(--muted);margin-bottom:14px;letter-spacing:0.06em;text-transform:uppercase;">Histórico recente</div>
+      <div id="history-list"></div>
+    </div>
+  </div>
+
+  <nav class="nav">
+    <button class="nav-btn active" onclick="goTo('home')" id="nav-home">
+      <span class="icon">🌙</span>Início
+    </button>
+    <button class="nav-btn" onclick="goTo('sons')" id="nav-sons">
+      <span class="icon">🎧</span>Sons
+    </button>
+    <button class
+          </button>
+    <button class="nav-btn" onclick="goTo('respiracao')" id="nav-respiracao">
+      <span class="icon">💨</span>Respirar
+    </button>
+    <button class="nav-btn" onclick="goTo('checklist')" id="nav-checklist">
+      <span class="icon">✓</span>Ritual
+    </button>
+    <button class="nav-btn" onclick="goTo('registro')" id="nav-registro">
+      <span class="icon">📊</span>Diário
+    </button>
+  </nav>
+
+</div>
+
+<script>
+  const state = {
+    currentScreen: 'home',
+    selectedAnswers: {},
+    timerMinutes: 30,
+    timerInterval: null,
+    timerRemaining: 0,
+    soundPlaying: null,
+    breathRunning: false,
+    breathCycle: 0,
+    breathPhase: 'idle',
+    breathInterval: null,
+    checklistDone: 0,
+    records: []
+  };
+
+  function goTo(screenId) {
+    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+    document.getElementById('screen-' + screenId).classList.add('active');
+    document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+    const navBtn = document.getElementById('nav-' + screenId);
+    if (navBtn) navBtn.classList.add('active');
+    state.currentScreen = screenId;
+    window.scrollTo(0, 0);
+  }
+
+  function selectOpt(el, qId) {
+    el.parentElement.querySelectorAll('.q-opt').forEach(o => o.classList.remove('selected'));
+    el.classList.add('selected');
+    state.selectedAnswers[qId] = el.textContent;
+  }
+
+  function showDiagResult() {
+    const q1 = state.selectedAnswers.q1;
+    const q2 = state.selectedAnswers.q2;
+    const q3 = state.selectedAnswers.q3;
+
+    if (!q1 ||!q2 ||!q3) {
+      alert('Responde todas as perguntas primeiro 🌙');
+      return;
+    }
+
+    let title = '';
+    let text = '';
+
+    if (q3.includes('Pensamentos')) {
+      title = 'Mente Acelerada';
+      text = 'Sua maior dificuldade são pensamentos que não desligam. Recomendo: técnica 4-7-8 de respiração + ruído branco por 30min antes de deitar. Evite telas 1h antes.';
+    } else if (q3.includes('Demoro')) {
+      title = 'Dificuldade para Adormecer';
+      text = 'Seu corpo demora a entender que é hora de dormir. Crie um ritual fixo: chá calmante, luz baixa, sons de chuva. Seu cérebro vai associar esses sinais ao sono.';
+    } else if (q3.includes('Acordo durante')) {
+      title = 'Sono Fragmentado';
+      text = 'Você acorda no meio da noite. Isso pode ser ansiedade ou ambiente. Teste: quarto totalmente escuro, temperatura 19°C, e meditação guiada se acordar.';
+    } else if (q3.includes('cansado')) {
+      title = 'Sono Não Reparador';
+      text = 'Você dorme mas não descansa. Provável: qualidade do sono baixa. Foque no ritual noturno completo e registre seus horários por 7 dias pra identificar padrões.';
+    } else {
+      title = 'Sono Equilibrado';
+      text = 'Você está no caminho certo! Continue com seus hábitos e use o app pra manter a consistência. Pequenos ajustes fazem grande diferença.';
+    }
+
+    document.getElementById('diag-title').textContent = title;
+    document.getElementById('diag-text').textContent = text;
+    document.getElementById('diag-result').style.display = 'block';
+    document.getElementById('diag-result').scrollIntoView({ behavior: 'smooth' });
+  }
+
+  const audioCtx = {};
+  let globalAudioContext = null;
+
+  function initAudio() {
+    if (!globalAudioContext) {
+      globalAudioContext = new (window.AudioContext || window.webkitAudioContext)();
+    }
+    return globalAudioContext;
+  }
+
+  function createNoise(type) {
+    const ctx = initAudio();
+    const bufferSize = 2 * ctx.sampleRate;
+    const noiseBuffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
+    const output = noiseBuffer.getChannelData(0);
+
+    for (let i = 0; i < bufferSize; i++) {
+      if (type === 'white') {
+        output[i] = Math.random() * 2 - 1;
+      } else if (type === 'rain') {
+        output[i] = (Math.random() * 2 - 1) * 0.3;
+      } else if (type === 'wind') {
+        output[i] = (Math.random() * 2 - 1) * 0.15;
+      } else if (type === 'ocean') {
+        output[i] = Math.sin(i * 0.001) * 0.2 + (Math.random() * 2 - 1) * 0.1;
+      } else if (type === 'fire') {
+        output[i] = (Math.random() * 2 - 1) * 0.2;
+      }
+    }
+
+    const source = ctx.createBufferSource();
+    source.buffer = noiseBuffer;
+    source.loop = true;
+
+    const gainNode = ctx.createGain();
+    gainNode.gain.value = 0.3;
+
+    source.connect(gainNode);
+    gainNode.connect(ctx.destination);
+
+    return { source, gainNode };
+  }
+
+  function toggleSound(card, type) {
+    const wasPlaying = card.classList.contains('playing');
+
+    document.querySelectorAll('.sound-card').forEach(c => {
+      c.classList.remove('playing');
+      c.querySelector('.play-btn').textContent = '▶️';
+    });
+
+    if (audioCtx.source) {
+      audioCtx.source.stop();
+      audioCtx.source = null;
+    }
+
+    if (wasPlaying) {
+      stopTimer();
+      state.soundPlaying = null;
+      return;
+    }
+
+    card.classList.add('playing');
+    card.querySelector('.play-btn').textContent = '⏸️';
+
+    const audio = createNoise(type);
+    audio.source.start(0);
+    audioCtx.source = audio.source;
+    audioCtx.gainNode = audio.gainNode;
+    state.soundPlaying = type;
+
+    if (state.timerMinutes > 0) {
+      startTimer();
+    }
+  }
+
+  function setTimer(btn, mins) {
+    document.querySelectorAll('.timer-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    state.timerMinutes = mins;
+
+    if (state.soundPlaying && mins > 0) {
+      startTimer();
+    } else if (mins === 0) {
+      stopTimer();
+    }
+  }
+
+  function startTimer() {
+    stopTimer();
+    state.timerRemaining = state.timerMinutes * 60;
+    updateTimerDisplay();
+
+    state.timerInterval = setInterval(() => {
+      state.timerRemaining--;
+      updateTimerDisplay();
+
+      if (state.timerRemaining <= 0) {
+        stopTimer();
+        if (audioCtx.source) {
+          audioCtx.source.stop();
+          audioCtx.source = null;
+        }
+        document.querySelectorAll('.sound-card').forEach(c => {
+          c.classList.remove('playing');
+          c.querySelector('.play-btn').textContent = '▶️';
+        });
+        state.soundPlaying = null;
+      }
+    }, 1000);
+  }
+
+  function stopTimer() {
+    if (state.timerInterval) {
+      clearInterval(state.timerInterval);
+      state.timerInterval = null;
+    }
+    document.getElementById('timer-display').textContent = '';
+  }
+
+  function updateTimerDisplay() {
+    const mins = Math.floor(state.timerRemaining / 60);
+    const secs = state.timerRemaining % 60;
+    document.getElementById('timer-display').textContent =
+      `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
+  }
+
+  function toggleBreath() {
+    if (state.breathRunning) {
+      stopBreath();
+    } else {
+      startBreath();
+    }
+  }
+
+  function startBreath() {
+    state.breathRunning = true;
+    state.breathCycle = 0;
+    document.getElementById('breath-btn').textContent = 'Parar';
+    breathCycle();
+  }
+
+  function stopBreath() {
+    state.breathRunning = false;
+    clearInterval(state.breathInterval);
+    document.getElementById('breath-btn').textContent = 'Começar';
+    document.getElementById('breath-count').textContent = '—';
+    document.getElementById('breath-phase').textContent = 'pronto para começar';
+    document.getElementById('breath-cycle-label').textContent = 'CICLO 0 / 4';
+    document.getElementById('breath-circle').className = 'breath-inner';
+    document.getElementById('breath-emoji').textContent = '🌙';
+  }
+
+  function breathCycle() {
+    if (!state.breathRunning) return;
+    state.breathCycle++;
+
+    if (state.breathCycle > 4) {
+      stopBreath();
+      document.getElementById('breath-phase').textContent = 'completo! ✨';
+      return;
+    }
+
+    document.getElementById('breath-cycle-label').textContent = `CICLO ${state.breathCycle} / 4`;
+    breathPhase('inspire', 4, () => {
+      breathPhase('segure', 7, () => {
+        breathPhase('expire', 8, () => {
+          breathCycle();
+        });
+      });
+    });
+  }
+
+  function breathPhase(phase, seconds, callback) {
+    if (!state.breathRunning) return;
+
+    state.breathPhase = phase;
+    document.getElementById('breath-phase').textContent = phase;
+
+    const circle = document.getElementById('breath-circle');
+    const emoji = document.getElementById('breath-emoji');
+
+    if (phase === 'inspire') {
+      circle.className = 'breath-inner expanding';
+      emoji.textContent = '🌬️';
+    } else if (phase === 'segure') {
+      circle.className = 'breath-inner holding';
+      emoji.textContent = '🌕';
+    } else {
+      circle.className = 'breath-inner shrinking';
+      emoji.textContent = '😮‍💨';
+    }
+
+    let count = seconds;
+    document.getElementById('breath-count').textContent = count;
+
+    clearInterval(state.breathInterval);
+    state.breathInterval = setInterval(() => {
+      count--;
+      document.getElementById('breath-count').textContent = count;
+
+      if (count <= 0) {
+        clearInterval(state.breathInterval);
+        callback();
+      }
+    }, 1000);
+  }
+
+  function toggleCheck(item) {
+    item.classList.toggle('done');
+    const box = item.querySelector('.check-box');
+    if (item.classList.contains('done')) {
+      box.textContent = '✓';
+      state.checklistDone++;
+    } else {
+      box.textContent = '';
+      state.checklistDone--;
+    }
+    updateCheckProgress();
+    updateHomeStats();
+  }
+
+  function updateCheckProgress() {
+    const total = 7;
+    const percent = (state.checklistDone / total) * 100;
+    document.getElementById('check-bar').style.width = percent + '%';
+    document.getElementById('check-progress-label').textContent = `${state.checklistDone} de ${total} concluídos`;
+    document.getElementById('checklist-val').textContent = state.checklistDone;
+  }
+
+  function selectQual(btn, qual) {
+    document.querySelectorAll('.qual-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+  }
+
+  function saveRecord() {
+    const sleepTime = document.getElementById('sleep-time').value;
+    const wakeTime = document.getElementById('wake-time').value;
+    const qual = document.querySelector('.qual-btn.active').textContent.trim();
+
+    if (!sleepTime ||!wakeTime) {
+      alert('Preencha os horários 🌙');
+      return;
+    }
+
+    const sleep = new Date(`2000-01-01 ${sleepTime}`);
+    let wake = new Date(`2000-01-01 ${wakeTime}`);
+    if (wake < sleep) wake.setDate(wake.getDate() + 1);
+
+    const hours = ((wake - sleep) / 1000 / 60 / 60).toFixed(1);
+
+    const record = {
+      date: new Date().toLocaleDateString('pt-BR', { day: '2-digit', month: 'short' }),
+      sleepTime,
+      wakeTime,
+      hours,
+      qual
+    };
+
+    state.records.unshift(record);
+    if (state.records.length > 7) state.records.pop();
+
+    renderHistory();
+    updateHomeStats();
+
+    const btn = event.target;
+    const oldText = btn.textContent;
+    btn.textContent = '✓ Salvo!';
+    setTimeout(() => btn.textContent = oldText, 2000);
+  }
+
+  function renderHistory() {
+    const list = document.getElementById('history-list');
+    if (state.records.length === 0) {
+      list.innerHTML = '<div style="text-align:center;color:var(--muted);font-size:13px;padding:20px 0;">Nenhum registro ainda</div>';
+      return;
+    }
+
+    list.innerHTML = state.records.map(r => `
+      <div class="history-item">
+        <div>
+          <div class="history-date">${r.date}</div>
+          <div style="font-size:11px;color:var(--soft);margin-top:2px;">${r.sleepTime} → ${r.wakeTime}</div>
+        </div>
+        <div style="text-align:right;">
+          <div class="history-hours">${r.hours}h</div>
+          <div class="history-qual">${getQualEmoji(r.qual)}</div>
+        </div>
+      </div>
+    `).join('');
+  }
+
+  function getQualEmoji(qual) {
+    if (qual.includes('Péssima')) return '😩';
+    if (qual.includes('Regular')) return '😐';
+    if (qual.includes('Boa')) return '🙂';
+    if (qual.includes('Ótima')) return '😴';
+    return '😐';
+  }
+
+  function updateHomeStats() {
+    const today = new Date().toDateString();
+    const todayRecord = state.records.find(r => r.date === new Date().toLocaleDateString('pt-BR', { day: '2-digit', month: 'short' }));
+
+    if (state.records.length > 0) {
+      const avg = state.records.reduce((sum, r) => sum + parseFloat(r.hours), 0) / state.records.length;
+      document.getElementById('avg-val').textContent = avg.toFixed(1) + 'h';
+    }
+
+    let streak = 0;
+    const today2 = new Date();
+    for (let i = 0; i < state.records.length; i++) {
+      const recordDate = new Date();
+      recordDate.setDate(today2.getDate() - i);
+      const recordDateStr = recordDate.toLocaleDateString('pt-BR', { day: '2-digit', month: 'short' });
+      if (state.records.find(r => r.date === recordDateStr)) {
+        streak++;
+      } else {
+        break;
+      }
+    }
+    document.getElementById('streak-val').textContent = streak;
+  }
+
+  renderHistory();
+  updateHomeStats();
+</script>
+
+</body>
+</html>
